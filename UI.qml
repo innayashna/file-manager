@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
+import FileManager 1.0
 
 ApplicationWindow {
     visible: true
@@ -26,8 +27,18 @@ ApplicationWindow {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        var selectedItem = model.name;
+                        var selectedItem = model.fullPath;
                         listDirectoryContents(selectedItem);
+                    }
+                }
+
+                Row {
+                    spacing: 5
+
+                    Image {
+                        source: model.icon
+                        width: 16
+                        height: 16
                     }
 
                     Text {
@@ -39,7 +50,7 @@ ApplicationWindow {
 
         Button {
             id: goBackButton
-            icon.source: "icons/arrow-small-left.png"
+            icon.source: "icons/navigation/arrow-small-left.png"
             onClicked: {
                 navigateUp();
             }
@@ -65,9 +76,11 @@ ApplicationWindow {
         fileModel.clear();
         var result = fileManager.listFilesAndFolders(directoryPath);
         for (var i = 0; i < result.length; ++i) {
-            fileModel.append({ name: result[i] });
+            fileModel.append({
+                name: result[i].name,
+                icon: result[i].icon,
+                fullPath: result[i].fullPath});
         }
-        // Update the current directory
         currentDirectory = directoryPath;
     }
 

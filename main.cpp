@@ -7,9 +7,8 @@ int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
+    qmlRegisterType<File>("FileManager", 1, 0, "File");
     FileManager fileManager;
-
-    // Expose the C++ object to QML
     engine.rootContext()->setContextProperty("fileManager", &fileManager);
 
     const QUrl url(QStringLiteral("qrc:/qt/qml/fileManager/UI.qml"));

@@ -3,12 +3,16 @@
 
 #include <QObject>
 #include <QStringList>
+#include "File.h"
 
 class FileManager : public QObject {
 Q_OBJECT
 public:
     explicit FileManager(QObject *parent = nullptr);
-    Q_INVOKABLE QStringList listFilesAndFolders(const QString &path);
+    Q_INVOKABLE static QList<File *> listFilesAndFolders(const QString &path);
+
+private:
+    static QString defineIcon(const File& file);
 };
 
 #endif // FILE_MANAGER_H
