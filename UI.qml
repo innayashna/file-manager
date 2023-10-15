@@ -21,24 +21,28 @@ ApplicationWindow {
             anchors.leftMargin: 20
 
             Text {
+                id: nameHeader
                 text: "Name"
                 font.bold: true
                 width: 200
             }
 
             Text {
+                id: extensionHeader
                 text: "Extension"
                 font.bold: true
-                width: 120
+                width: 110
             }
 
             Text {
+                id: sizeHeader
                 text: "Size"
                 font.bold: true
                 width: 100
             }
 
             Text {
+                id: dateHeader
                 text: "Date Modified"
                 font.bold: true
                 width: 200
@@ -71,18 +75,18 @@ ApplicationWindow {
                     }
 
                     Text {
-                        text: model.extension
-                        width: 100
+                        text: model.showExtension ? model.extension : ""
+                        width: model.showExtension ? 100 : 0
                     }
 
                     Text {
-                        text: model.size
-                        width: 100
+                        text: model.showSize ? model.size : ""
+                        width: model.showSize ? 100 : 0
                     }
 
                     Text {
-                        text: model.dateModified
-                        width: 200
+                        text: model.showDate ? model.dateModified : ""
+                        width: model.showDateModified ? 200 : 0
                     }
                 }
 
@@ -96,14 +100,65 @@ ApplicationWindow {
             }
         }
 
-        Button {
-            id: goBackButton
-            icon.source: "icons/navigation/arrow-small-left.png"
-            onClicked: {
-                navigateUp();
+        Row {
+            spacing: 5
+
+            Button {
+                id: goBackButton
+                icon.source: "icons/navigation/arrow-small-left.png"
+                onClicked: {
+                    navigateUp();
+                }
+                background: Rectangle {
+                    color: "transparent"
+                }
             }
-            background: Rectangle {
-                color: "transparent"
+
+            Button {
+                id: attributeMenuButton
+                text: "Attributes"
+                font.bold: true
+
+                background: Rectangle {
+                    color: "transparent"
+                }
+
+                onClicked: attributeMenu.popup()
+
+                Menu {
+                    id: attributeMenu
+                    y: attributeMenuButton.height
+                    MenuItem {
+                        id: extensionMenuItem
+                        text: "Extension"
+                        checkable: true
+                        checked: true
+
+                        onCheckedChanged: {
+                            updateAttributeVisibility("showExtension", checked);
+                        }
+                    }
+                    MenuItem {
+                        id: sizeMenuItem
+                        text: "Size"
+                        checkable: true
+                        checked: true
+
+                        onCheckedChanged: {
+                            updateAttributeVisibility("showSize", checked);
+                        }
+                    }
+                    MenuItem {
+                        id: dateMenuItem
+                        text: "Date Modified"
+                        checkable: true
+                        checked: true
+
+                        onCheckedChanged: {
+                            updateAttributeVisibility("showDate", checked);
+                        }
+                    }
+                }
             }
         }
 
@@ -113,10 +168,12 @@ ApplicationWindow {
     }
 
     property string currentDirectory: "/"
+    property bool showExtension: true
+    property bool showSize: true
+    property bool showDate: true
 
     Component.onCompleted: {
         listDirectoryContents("/");
-        goBackButton.visible = true;
     }
 
     function listDirectoryContents(directoryPath) {
@@ -129,7 +186,10 @@ ApplicationWindow {
                 size: result[i].size,
                 extension: result[i].extension,
                 dateModified: result[i].dateModified,
-                fullPath: result[i].fullPath
+                fullPath: result[i].fullPath,
+                showExtension: showExtension,
+                showSize: showSize,
+                showDate: showDate
             });
         }
         currentDirectory = directoryPath;
@@ -138,16 +198,35 @@ ApplicationWindow {
     function navigateUp() {
         var parts = currentDirectory.split('/');
         if (parts.length > 1) {
-            parts.pop(); // Remove the last part (current directory)
+            parts.pop();
             var previousDirectory = parts.join('/');
-            // Check if previousDirectory is empty, and if so, set it to "/"
             if (previousDirectory === "") {
                 previousDirectory = "/";
             }
             listDirectoryContents(previousDirectory);
         } else {
-            // If at the root, just list the contents of the root again
             listDirectoryContents("/");
+        }
+    }
+
+    function updateAttributeVisibility(attribute, checked) {
+        for (var i = 0; i < fileModel.count; ++i) {
+            fileModel.get(i)[attribute] = checked;
+        }
+
+        switch (attribute) {
+            case "showExtension":
+                extensionHeader.visible = checked;
+                showExtension = checked;
+                break;
+            case "showSize":
+                sizeHeader.visible = checked;
+                showSize = checked;
+                break;
+            case "showDate":
+                dateHeader.visible = checked;
+                showDate = checked;
+                break;
         }
     }
 }
