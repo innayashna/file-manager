@@ -9,6 +9,8 @@ ApplicationWindow {
     height: 600
     title: "File Manager"
 
+    property string currentDirectory: "/"
+
     Rectangle {
         color: "white"
         anchors.fill: parent
@@ -93,8 +95,9 @@ ApplicationWindow {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        var selectedItem = model.fullPath;
+                        const selectedItem = model.fullPath;
                         listDirectoryContents(selectedItem);
+                        resetSorting();
                     }
                 }
             }
@@ -107,6 +110,7 @@ ApplicationWindow {
                 id: goBackButton
                 icon.source: "icons/navigation/arrow-small-left.png"
                 onClicked: {
+                    resetSorting();
                     navigateUp();
                 }
                 background: Rectangle {
@@ -160,6 +164,56 @@ ApplicationWindow {
                     }
                 }
             }
+
+            Button {
+                id: sortMenuButton
+                text: "Sort"
+                font.bold: true
+
+                background: Rectangle {
+                    color: "transparent"
+                }
+
+                onClicked: sortMenu.popup()
+
+                Menu {
+                    id: sortMenu
+                    y: sortMenuButton.height
+
+                    RadioButton {
+                        id: sortNone
+                        text: "None"
+                        checked: true
+                        onClicked: {
+                            listDirectoryContents(currentDirectory)
+                        }
+                    }
+
+                    RadioButton {
+                        id: sortByName
+                        text: "By name"
+                        onClicked: {
+                            sortDirectoryContentsByName();
+                        }
+                    }
+
+                    RadioButton {
+                        id: sortBySize
+                        text: "By size"
+                        onClicked: {
+                            sortDirectoryContentsBySize();
+                        }
+                    }
+
+                    RadioButton {
+                        id: sortByDateModified
+                        text: "By date"
+                        onClicked: {
+                            sortDirectoryContentsByDateModified();
+                        }
+                    }
+                }
+            }
         }
 
         ListModel {
@@ -167,19 +221,18 @@ ApplicationWindow {
         }
     }
 
-    property string currentDirectory: "/"
-    property bool showExtension: true
-    property bool showSize: true
-    property bool showDate: true
-
     Component.onCompleted: {
         listDirectoryContents("/");
     }
 
+    property bool showExtension: true
+    property bool showSize: true
+    property bool showDate: true
+
     function listDirectoryContents(directoryPath) {
         fileModel.clear();
-        var result = fileManager.listFilesAndFolders(directoryPath);
-        for (var i = 0; i < result.length; ++i) {
+        const result = fileManager.listFilesAndFolders(directoryPath);
+        for (let i = 0; i < result.length; ++i) {
             fileModel.append({
                 name: result[i].name,
                 icon: result[i].icon,
@@ -196,10 +249,10 @@ ApplicationWindow {
     }
 
     function navigateUp() {
-        var parts = currentDirectory.split('/');
+        const parts = currentDirectory.split('/');
         if (parts.length > 1) {
             parts.pop();
-            var previousDirectory = parts.join('/');
+            let previousDirectory = parts.join('/');
             if (previousDirectory === "") {
                 previousDirectory = "/";
             }
@@ -210,7 +263,7 @@ ApplicationWindow {
     }
 
     function updateAttributeVisibility(attribute, checked) {
-        for (var i = 0; i < fileModel.count; ++i) {
+        for (let i = 0; i < fileModel.count; ++i) {
             fileModel.get(i)[attribute] = checked;
         }
 
@@ -228,5 +281,63 @@ ApplicationWindow {
                 showDate = checked;
                 break;
         }
+    }
+
+    function sortDirectoryContentsByName() {
+        fileModel.clear();
+        const result = fileManager.sortByName(currentDirectory);
+        for (let i = 0; i < result.length; ++i) {
+            fileModel.append({
+                name: result[i].name,
+                icon: result[i].icon,
+                size: result[i].size,
+                extension: result[i].extension,
+                dateModified: result[i].dateModified,
+                fullPath: result[i].fullPath,
+                showExtension: showExtension,
+                showSize: showSize,
+                showDate: showDate
+            });
+        }
+    }
+
+    function sortDirectoryContentsBySize() {
+        fileModel.clear();
+        const result = fileManager.sortBySize(currentDirectory);
+        for (let i = 0; i < result.length; ++i) {
+            fileModel.append({
+                name: result[i].name,
+                icon: result[i].icon,
+                size: result[i].size,
+                extension: result[i].extension,
+                dateModified: result[i].dateModified,
+                fullPath: result[i].fullPath,
+                showExtension: showExtension,
+                showSize: showSize,
+                showDate: showDate
+            });
+        }
+    }
+
+    function sortDirectoryContentsByDateModified() {
+        fileModel.clear();
+        const result = fileManager.sortByDateModified(currentDirectory);
+        for (let i = 0; i < result.length; ++i) {
+            fileModel.append({
+                name: result[i].name,
+                icon: result[i].icon,
+                size: result[i].size,
+                extension: result[i].extension,
+                dateModified: result[i].dateModified,
+                fullPath: result[i].fullPath,
+                showExtension: showExtension,
+                showSize: showSize,
+                showDate: showDate
+            });
+        }
+    }
+
+    function resetSorting() {
+        sortNone.checked = true;
     }
 }

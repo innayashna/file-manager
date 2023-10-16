@@ -32,6 +32,29 @@ QList<File*> FileManager::listFilesAndFolders(const QString &path) {
     return result;
 }
 
+QList<File*> FileManager::sortByName(const QString &path) {
+    QList<File*> fileList = listFilesAndFolders(path);
+    std::sort(fileList.begin(), fileList.end(), [](File *a, File *b) {
+        return a->getName().toLower() < b->getName().toLower();
+    });
+    return fileList;
+}
+
+QList<File*> FileManager::sortBySize(const QString &path) {
+    QList<File*> fileList = listFilesAndFolders(path);
+    std::sort(fileList.begin(), fileList.end(), [](File *a, File *b) {
+        return a->getSize() < b->getSize();
+    });
+    return fileList;
+}
+
+QList<File*> FileManager::sortByDateModified(const QString &path) {
+    QList<File*> fileList = listFilesAndFolders(path);
+    std::sort(fileList.begin(), fileList.end(), [](File *a, File *b) {
+        return a->getDateModified() > b->getDateModified();
+    });
+    return fileList;
+}
 
 QString FileManager::defineIcon(const File& file) {
     if (file.isDirectory()) {
