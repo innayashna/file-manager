@@ -60,12 +60,18 @@ QString FileManager::defineIcon(const File& file) {
     if (file.isDirectory()) {
         return "icons/file/folder.png";
     } else {
-        if (file.getExtension().toLower() == "txt") {
+        QString extension = file.getExtension().toLower();
+
+        if (extension == "txt") {
             return "icons/file/txt.png";
-        } else if (file.getExtension().toLower() == "jpeg") {
+        } else if (extension == "jpeg") {
             return "icons/file/picture.png";
-        } else if (file.getExtension().toLower() == "pdf") {
+        } else if (extension == "pdf") {
             return "icons/file/pdf.png";
+        } else if (extension == "mp3") {
+            return "icons/file/music.png";
+        } else if (extension == "mp4") {
+            return "icons/file/video.png";
         } else {
             return "icons/file/default-file.png";
         }
