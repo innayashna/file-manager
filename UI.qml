@@ -229,9 +229,8 @@ ApplicationWindow {
     property bool showSize: true
     property bool showDate: true
 
-    function listDirectoryContents(directoryPath) {
+    function populateFileModel(result) {
         fileModel.clear();
-        const result = fileManager.listFilesAndFolders(directoryPath);
         for (let i = 0; i < result.length; ++i) {
             fileModel.append({
                 name: result[i].name,
@@ -245,7 +244,31 @@ ApplicationWindow {
                 showDate: showDate
             });
         }
+    }
+
+    function listDirectoryContents(directoryPath) {
+        const result = fileManager.listFilesAndFolders(directoryPath);
+        populateFileModel(result);
         currentDirectory = directoryPath;
+    }
+
+    function sortDirectoryContentsByName() {
+        const result = fileManager.sortByName(currentDirectory);
+        populateFileModel(result);
+    }
+
+    function sortDirectoryContentsBySize() {
+        const result = fileManager.sortBySize(currentDirectory);
+        populateFileModel(result);
+    }
+
+    function sortDirectoryContentsByDateModified() {
+        const result = fileManager.sortByDateModified(currentDirectory);
+        populateFileModel(result);
+    }
+
+    function resetSorting() {
+        sortNone.checked = true;
     }
 
     function navigateUp() {
@@ -281,63 +304,5 @@ ApplicationWindow {
                 showDate = checked;
                 break;
         }
-    }
-
-    function sortDirectoryContentsByName() {
-        fileModel.clear();
-        const result = fileManager.sortByName(currentDirectory);
-        for (let i = 0; i < result.length; ++i) {
-            fileModel.append({
-                name: result[i].name,
-                icon: result[i].icon,
-                size: result[i].size,
-                extension: result[i].extension,
-                dateModified: result[i].dateModified,
-                fullPath: result[i].fullPath,
-                showExtension: showExtension,
-                showSize: showSize,
-                showDate: showDate
-            });
-        }
-    }
-
-    function sortDirectoryContentsBySize() {
-        fileModel.clear();
-        const result = fileManager.sortBySize(currentDirectory);
-        for (let i = 0; i < result.length; ++i) {
-            fileModel.append({
-                name: result[i].name,
-                icon: result[i].icon,
-                size: result[i].size,
-                extension: result[i].extension,
-                dateModified: result[i].dateModified,
-                fullPath: result[i].fullPath,
-                showExtension: showExtension,
-                showSize: showSize,
-                showDate: showDate
-            });
-        }
-    }
-
-    function sortDirectoryContentsByDateModified() {
-        fileModel.clear();
-        const result = fileManager.sortByDateModified(currentDirectory);
-        for (let i = 0; i < result.length; ++i) {
-            fileModel.append({
-                name: result[i].name,
-                icon: result[i].icon,
-                size: result[i].size,
-                extension: result[i].extension,
-                dateModified: result[i].dateModified,
-                fullPath: result[i].fullPath,
-                showExtension: showExtension,
-                showSize: showSize,
-                showDate: showDate
-            });
-        }
-    }
-
-    function resetSorting() {
-        sortNone.checked = true;
     }
 }
