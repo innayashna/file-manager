@@ -10,6 +10,7 @@ ApplicationWindow {
     title: "File Manager"
 
     property string currentDirectory: "/"
+    property var directoryHistory: []
 
     Rectangle {
         color: "white"
@@ -96,6 +97,7 @@ ApplicationWindow {
                     anchors.fill: parent
                     onClicked: {
                         const selectedItem = model.fullPath;
+                        goBackButton.enabled = true
                         listDirectoryContents(selectedItem);
                         resetSorting();
                     }
@@ -109,9 +111,23 @@ ApplicationWindow {
             Button {
                 id: goBackButton
                 icon.source: "icons/navigation/arrow-small-left.png"
+                enabled: false
                 onClicked: {
                     resetSorting();
-                    navigateUp();
+                    navigateBack();
+                }
+                background: Rectangle {
+                    color: "transparent"
+                }
+            }
+
+            Button {
+                id: goForwardButton
+                icon.source: "icons/navigation/arrow-small-right.png"
+                enabled: false
+                onClicked: {
+                    resetSorting();
+                    navigateForward();
                 }
                 background: Rectangle {
                     color: "transparent"
@@ -271,20 +287,6 @@ ApplicationWindow {
         sortNone.checked = true;
     }
 
-    function navigateUp() {
-        const parts = currentDirectory.split('/');
-        if (parts.length > 1) {
-            parts.pop();
-            let previousDirectory = parts.join('/');
-            if (previousDirectory === "") {
-                previousDirectory = "/";
-            }
-            listDirectoryContents(previousDirectory);
-        } else {
-            listDirectoryContents("/");
-        }
-    }
-
     function updateAttributeVisibility(attribute, checked) {
         for (let i = 0; i < fileModel.count; ++i) {
             fileModel.get(i)[attribute] = checked;
@@ -303,6 +305,35 @@ ApplicationWindow {
                 dateHeader.visible = checked;
                 showDate = checked;
                 break;
+        }
+    }
+
+    function navigateBack() {
+        const parts = currentDirectory.split('/');
+        if (parts.length > 1) {
+            parts.pop();
+            let previousDirectory = parts.join('/');
+            if (previousDirectory === "") {
+                goBackButton.enabled = false;
+                previousDirectory = "/";
+            }
+            directoryHistory.push(currentDirectory);
+            goForwardButton.enabled = true;
+            listDirectoryContents(previousDirectory);
+        } else {
+            listDirectoryContents("/");
+        }
+    }
+
+    function navigateForward() {
+        if (directoryHistory.length >= 1) {
+            const forwardDirectory = directoryHistory.pop();
+            if (forwardDirectory.startsWith(currentDirectory.toString())) {
+                listDirectoryContents(forwardDirectory);
+                goBackButton.enabled = true;
+            } else {
+                goForwardButton.enabled = false;
+            }
         }
     }
 }

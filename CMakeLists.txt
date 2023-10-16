@@ -22,6 +22,7 @@ qt_add_qml_module(file_manager
             UI.qml
         RESOURCES
             icons/navigation/arrow-small-left.png
+            icons/navigation/arrow-small-right.png
             icons/file/default-file.png
             icons/file/folder.png
             icons/file/pdf.png
