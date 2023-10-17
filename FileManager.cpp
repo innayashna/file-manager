@@ -56,6 +56,32 @@ QList<File*> FileManager::sortByDateModified(const QString &path) {
     return fileList;
 }
 
+void FileManager::copy(const QString &sourcePath, const QString &destinationPath) {
+    fs::path source = sourcePath.toStdString();
+    fs::path destination = destinationPath.toStdString();
+
+    try {
+        if (fs::exists(source)) {
+            std::string sourceName = source.filename();
+            fs::path destinationWithFileName = destination / sourceName;
+
+            int index = 1;
+            while (fs::exists(destinationWithFileName)) {
+                std::string newName = generateUniqueName(sourceName, index);
+                destinationWithFileName = destination / newName;
+                index++;
+            }
+
+            fs::copy(source, destinationWithFileName, fs::copy_options::recursive);
+        } else {
+            qDebug() << "Source path does not exist: " << sourcePath;
+        }
+    } catch (const std::exception &ex) {
+        qDebug() << "Error copying file/directory: " << ex.what();
+    }
+}
+
+
 QString FileManager::defineIcon(const File& file) {
     if (file.isDirectory()) {
         return "icons/file/folder.png";
@@ -75,5 +101,15 @@ QString FileManager::defineIcon(const File& file) {
         } else {
             return "icons/file/default-file.png";
         }
+    }
+}
+
+std::string FileManager::generateUniqueName(const std::string &sourceName, int index) {
+    if (sourceName.find('.') != std::string::npos) {
+        std::string baseName = sourceName.substr(0, sourceName.find_last_of('.'));
+        std::string extension = sourceName.substr(sourceName.find_last_of('.'));
+        return baseName + "_" + std::to_string(index) + extension;
+    } else {
+        return sourceName + "_" + std::to_string(index);
     }
 }

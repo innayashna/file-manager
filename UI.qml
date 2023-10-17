@@ -11,6 +11,7 @@ ApplicationWindow {
 
     property string currentDirectory: "/"
     property var directoryHistory: []
+    property string clipboardSourcePath: ""
 
     Rectangle {
         color: "white"
@@ -100,6 +101,40 @@ ApplicationWindow {
                         goBackButton.enabled = true
                         listDirectoryContents(selectedItem);
                         resetSorting();
+                    }
+                }
+
+                MouseArea {
+                    id: fileActionsMenuArea
+                    anchors.fill: parent
+                    acceptedButtons: Qt.RightButton
+
+                    onClicked: (mouse)=> {
+                        if (mouse.button === Qt.RightButton) {
+                            fileActionsMenu.popup();
+                        }
+                    }
+                }
+
+                Menu {
+                    id: fileActionsMenu
+                    height: pasteMenuItem.visible ? 120 : 60
+
+                    MenuItem {
+                        id: copyMenuItem
+                        text: "Copy"
+                        onTriggered: {
+                            copyItem(model.fullPath)
+                        }
+                    }
+
+                    MenuItem {
+                        id: pasteMenuItem
+                        text: "Paste"
+                        visible: clipboardSourcePath !== ""
+                        onTriggered: {
+                            pasteItem(model.fullPath)
+                        }
                     }
                 }
             }
@@ -334,6 +369,20 @@ ApplicationWindow {
             } else {
                 goForwardButton.enabled = false;
             }
+        }
+    }
+
+    function copyItem(sourcePath) {
+        clipboardSourcePath = sourcePath;
+    }
+
+    function pasteItem(destinationPath) {
+        const sourcePath = clipboardSourcePath;
+
+        if (sourcePath && destinationPath) {
+            fileManager.copy(sourcePath, destinationPath);
+            listDirectoryContents(destinationPath);
+            clipboardSourcePath = "";
         }
     }
 }
