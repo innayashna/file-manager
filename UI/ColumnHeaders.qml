@@ -3,7 +3,13 @@ import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 
 Row {
+    id: columnHeaders
     spacing: 5
+
+    property alias extensionHeader: extensionHeader
+    property alias sizeHeader: sizeHeader
+    property alias dateHeader: dateHeader
+
 
     Text {
         id: nameHeader

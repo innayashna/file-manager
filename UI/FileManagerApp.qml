@@ -19,6 +19,7 @@ ApplicationWindow {
         anchors.fill: parent
 
         ColumnHeaders {
+            id: columnHeaders
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.topMargin: 50
@@ -97,15 +98,15 @@ ApplicationWindow {
 
         switch (attribute) {
             case "showExtension":
-                extensionHeader.visible = checked;
+                columnHeaders.extensionHeader.visible = checked;
                 showExtension = checked;
                 break;
             case "showSize":
-                sizeHeader.visible = checked;
+                columnHeaders.sizeHeader.visible = checked;
                 showSize = checked;
                 break;
             case "showDate":
-                dateHeader.visible = checked;
+                columnHeaders.dateHeader.visible = checked;
                 showDate = checked;
                 break;
         }
