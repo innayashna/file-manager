@@ -6,6 +6,10 @@ Row {
     id: toolbar
     spacing: 5
 
+    property alias goBackButton: goBackButton
+    property alias goForwardButton: goForwardButton
+    property alias sortNone: sortMenu.sortNone
+
     Button {
         id: goBackButton
         icon.source: "icons/navigation/arrow-small-left.png"
@@ -43,41 +47,8 @@ Row {
 
         onClicked: attributeMenu.popup()
 
-        Menu {
+        AttributeMenu {
             id: attributeMenu
-            y: attributeMenuButton.height
-            MenuItem {
-                id: extensionMenuItem
-                text: "Extension"
-                checkable: true
-                checked: true
-
-                onCheckedChanged: {
-                    updateAttributeVisibility("showExtension", checked);
-                }
-            }
-
-            MenuItem {
-                id: sizeMenuItem
-                text: "Size"
-                checkable: true
-                checked: true
-
-                onCheckedChanged: {
-                    updateAttributeVisibility("showSize", checked);
-                }
-            }
-
-            MenuItem {
-                id: dateMenuItem
-                text: "Date Modified"
-                checkable: true
-                checked: true
-
-                onCheckedChanged: {
-                    updateAttributeVisibility("showDate", checked);
-                }
-            }
         }
     }
 
@@ -92,42 +63,8 @@ Row {
 
         onClicked: sortMenu.popup()
 
-        Menu {
+        SortMenu {
             id: sortMenu
-            y: sortMenuButton.height
-
-            RadioButton {
-                id: sortNone
-                text: "None"
-                checked: true
-                onClicked: {
-                    listDirectoryContents(currentDirectory)
-                }
-            }
-
-            RadioButton {
-                id: sortByName
-                text: "By name"
-                onClicked: {
-                    sortDirectoryContentsByName();
-                }
-            }
-
-            RadioButton {
-                id: sortBySize
-                text: "By size"
-                onClicked: {
-                    sortDirectoryContentsBySize();
-                }
-            }
-
-            RadioButton {
-                id: sortByDateModified
-                text: "By date"
-                onClicked: {
-                    sortDirectoryContentsByDateModified();
-                }
-            }
         }
     }
 }

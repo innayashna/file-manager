@@ -19,20 +19,23 @@ add_executable(file_manager main.cpp
 qt_add_qml_module(file_manager
         URI fileManager
         QML_FILES
-        UI/FileManagerApp.qml
-        UI/ColumnHeaders.qml
-        UI/FileList.qml
-        UI/Toolbar.qml
+            UI/FileManagerApp.qml
+            UI/ColumnHeaders.qml
+            UI/FileList.qml
+            UI/Toolbar.qml
+            UI/AttributeMenu.qml
+            UI/SortMenu.qml
+            UI/FileActionsMenu.qml
         RESOURCES
-        UI/icons/navigation/arrow-small-left.png
-        UI/icons/navigation/arrow-small-right.png
-        UI/icons/file/default-file.png
-        UI/icons/file/folder.png
-        UI/icons/file/pdf.png
-        UI/icons/file/picture.png
-        UI/icons/file/txt.png
-        UI/icons/file/video.png
-        UI/icons/file/music.png
+            UI/icons/navigation/arrow-small-left.png
+            UI/icons/navigation/arrow-small-right.png
+            UI/icons/file/default-file.png
+            UI/icons/file/folder.png
+            UI/icons/file/pdf.png
+            UI/icons/file/picture.png
+            UI/icons/file/txt.png
+            UI/icons/file/video.png
+            UI/icons/file/music.png
 )
 
 target_link_libraries(file_manager PRIVATE

@@ -12,7 +12,13 @@ ApplicationWindow {
     property string currentDirectory: "/"
     property var directoryHistory: []
     property string clipboardSourcePath: ""
+
+    property bool showExtension: true
+    property bool showSize: true
+    property bool showDate: true
+
     property string cutItemPath: ""
+    property var cutItems: []
 
     Rectangle {
         color: "white"
@@ -27,6 +33,7 @@ ApplicationWindow {
         }
 
         FileList {
+            id: fileListView
             anchors.fill: parent
             anchors.leftMargin: 20
             anchors.topMargin: 80
@@ -44,10 +51,6 @@ ApplicationWindow {
     Component.onCompleted: {
         listDirectoryContents("/");
     }
-
-    property bool showExtension: true
-    property bool showSize: true
-    property bool showDate: true
 
     function populateFileModel(result) {
         fileModel.clear();
@@ -88,7 +91,7 @@ ApplicationWindow {
     }
 
     function resetSorting() {
-        sortNone.checked = true;
+        toolbar.sortNone.checked = true;
     }
 
     function updateAttributeVisibility(attribute, checked) {
@@ -118,11 +121,11 @@ ApplicationWindow {
             parts.pop();
             let previousDirectory = parts.join('/');
             if (previousDirectory === "") {
-                goBackButton.enabled = false;
+                toolbar.goBackButton.enabled = false;
                 previousDirectory = "/";
             }
             directoryHistory.push(currentDirectory);
-            goForwardButton.enabled = true;
+            toolbar.goForwardButton.enabled = true;
             listDirectoryContents(previousDirectory);
         } else {
             listDirectoryContents("/");
@@ -134,14 +137,12 @@ ApplicationWindow {
             const forwardDirectory = directoryHistory.pop();
             if (forwardDirectory.startsWith(currentDirectory.toString())) {
                 listDirectoryContents(forwardDirectory);
-                goBackButton.enabled = true;
+                toolbar.goBackButton.enabled = true;
             } else {
-                goForwardButton.enabled = false;
+                toolbar.goForwardButton.enabled = false;
             }
         }
     }
-
-    property var cutItems: []
 
     function copyItem(sourcePath) {
         clipboardSourcePath = sourcePath;
