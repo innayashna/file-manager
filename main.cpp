@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     FileManager fileManager;
     engine.rootContext()->setContextProperty("fileManager", &fileManager);
 
-    const QUrl url(QStringLiteral("qrc:/qt/qml/fileManager/UI.qml"));
+    const QUrl url(QStringLiteral("qrc:/qt/qml/fileManager/UI/FileManagerApp.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
                 if (!obj && url == objUrl)
