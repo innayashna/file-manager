@@ -17,6 +17,7 @@ public:
     Q_INVOKABLE static QList<File*> sortByDateModified(const QString &path);
     Q_INVOKABLE static void copyItem(const QString &sourcePath, const QString &destinationPath);
     Q_INVOKABLE static void deleteItem(const QString &path);
+    Q_INVOKABLE static void renameItem(const QString &sourcePath, const QString &newName);
 
 private:
     static QString defineIcon(const File& file);

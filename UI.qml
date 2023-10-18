@@ -147,6 +147,14 @@ ApplicationWindow {
                     }
 
                     MenuItem {
+                        id: renameMenuItem
+                        text: "Rename"
+                        onTriggered: {
+                            renameDialog.open();
+                        }
+                    }
+
+                    MenuItem {
                         id: deleteMenuItem
                         text: "Delete"
                         onTriggered: {
@@ -154,6 +162,27 @@ ApplicationWindow {
                         }
                     }
                 }
+
+                Dialog {
+                    id: renameDialog
+                    title: "Rename Item"
+                    standardButtons: Dialog.Ok | Dialog.Cancel
+
+                    TextInput {
+                        id: newNameInput
+                        width: 300
+                        text: model.name
+                        selectByMouse: true
+                    }
+
+                    onAccepted: {
+                        const newName = newNameInput.text.trim();
+                        if (newName !== "") {
+                            renameItem(model.fullPath, newName);
+                        }
+                    }
+                }
+
             }
         }
 
@@ -424,4 +453,12 @@ ApplicationWindow {
         clipboardSourcePath = fullPath;
         cutItems.push(fullPath);
     }
+
+    function renameItem(sourcePath, newName) {
+        if (newName !== "") {
+            fileManager.renameItem(sourcePath, newName);
+            listDirectoryContents(currentDirectory);
+        }
+    }
+
 }

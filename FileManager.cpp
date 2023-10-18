@@ -98,6 +98,27 @@ void FileManager::deleteItem(const QString &path) {
     }
 }
 
+void FileManager::renameItem(const QString &sourcePath, const QString &newName) {
+    fs::path source = sourcePath.toStdString();
+    fs::path parentPath = source.parent_path();
+    fs::path newPath = parentPath / newName.toStdString();
+
+    try {
+        if (fs::exists(source)) {
+            if (!fs::exists(newPath)) {
+                fs::rename(source, newPath);
+            } else {
+                qDebug() << "A file with the same name already exists at the destination.";
+            }
+        } else {
+            qDebug() << "Source path does not exist: " << sourcePath;
+        }
+    } catch (const std::exception &ex) {
+        qDebug() << "Error renaming file/directory: " << ex.what();
+    }
+}
+
+
 
 QString FileManager::defineIcon(const File& file) {
     if (file.isDirectory()) {
