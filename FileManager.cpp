@@ -56,7 +56,7 @@ QList<File*> FileManager::sortByDateModified(const QString &path) {
     return fileList;
 }
 
-void FileManager::copy(const QString &sourcePath, const QString &destinationPath) {
+void FileManager::copyItem(const QString &sourcePath, const QString &destinationPath) {
     fs::path source = sourcePath.toStdString();
     fs::path destination = destinationPath.toStdString();
 
@@ -78,6 +78,23 @@ void FileManager::copy(const QString &sourcePath, const QString &destinationPath
         }
     } catch (const std::exception &ex) {
         qDebug() << "Error copying file/directory: " << ex.what();
+    }
+}
+
+void FileManager::deleteItem(const QString &path) {
+    fs::path itemPath = path.toStdString();
+    try {
+        if (fs::exists(itemPath)) {
+            if (fs::is_directory(itemPath)) {
+                fs::remove_all(itemPath);
+            } else {
+                fs::remove(itemPath);
+            }
+        } else {
+            qDebug() << "Item does not exist: " << path;
+        }
+    } catch (const std::exception &ex) {
+        qDebug() << "Error deleting file/directory: " << ex.what();
     }
 }
 

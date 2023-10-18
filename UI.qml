@@ -12,6 +12,7 @@ ApplicationWindow {
     property string currentDirectory: "/"
     property var directoryHistory: []
     property string clipboardSourcePath: ""
+    property string cutItemPath: ""
 
     Rectangle {
         color: "white"
@@ -75,6 +76,7 @@ ApplicationWindow {
 
                     Text {
                         text: model.name
+                        color: model.fullPath === cutItemPath ? "gray" : "black"
                         width: 200
                     }
 
@@ -118,7 +120,6 @@ ApplicationWindow {
 
                 Menu {
                     id: fileActionsMenu
-                    height: pasteMenuItem.visible ? 120 : 60
 
                     MenuItem {
                         id: copyMenuItem
@@ -129,11 +130,27 @@ ApplicationWindow {
                     }
 
                     MenuItem {
+                        id: cutMenuItem
+                        text: "Cut"
+                        onTriggered: {
+                            cutItem(model.fullPath)
+                        }
+                    }
+
+                    MenuItem {
                         id: pasteMenuItem
                         text: "Paste"
-                        visible: clipboardSourcePath !== ""
+                        enabled: clipboardSourcePath !== ""
                         onTriggered: {
                             pasteItem(model.fullPath)
+                        }
+                    }
+
+                    MenuItem {
+                        id: deleteMenuItem
+                        text: "Delete"
+                        onTriggered: {
+                            deleteItem(model.fullPath)
                         }
                     }
                 }
@@ -292,7 +309,7 @@ ApplicationWindow {
                 fullPath: result[i].fullPath,
                 showExtension: showExtension,
                 showSize: showSize,
-                showDate: showDate
+                showDate: showDate,
             });
         }
     }
@@ -372,17 +389,39 @@ ApplicationWindow {
         }
     }
 
+    property var cutItems: []
+
     function copyItem(sourcePath) {
         clipboardSourcePath = sourcePath;
+        cutItems = [];
     }
 
     function pasteItem(destinationPath) {
         const sourcePath = clipboardSourcePath;
 
         if (sourcePath && destinationPath) {
-            fileManager.copy(sourcePath, destinationPath);
+            if (cutItems.includes(sourcePath)) {
+                fileManager.copyItem(sourcePath, destinationPath);
+                deleteItem(sourcePath);
+                cutItems = cutItems.filter(item => item !== sourcePath);
+            } else {
+                fileManager.copyItem(sourcePath, destinationPath);
+            }
             listDirectoryContents(destinationPath);
             clipboardSourcePath = "";
         }
+    }
+
+    function deleteItem(fullPath) {
+        fileManager.deleteItem(fullPath);
+        listDirectoryContents(currentDirectory);
+        cutItems = cutItems.filter(item => item !== fullPath);
+    }
+
+    function cutItem(fullPath) {
+        cutItemPath = fullPath;
+        listDirectoryContents(currentDirectory);
+        clipboardSourcePath = fullPath;
+        cutItems.push(fullPath);
     }
 }
