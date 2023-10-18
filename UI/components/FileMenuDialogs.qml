@@ -2,49 +2,12 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 
-Menu {
-    id: fileActionsMenu
 
-    MenuItem {
-        id: copyMenuItem
-        text: "Copy"
-        onTriggered: {
-            copyItem(model.fullPath)
-        }
-    }
+Item {
+    id: menuDialogs
 
-    MenuItem {
-        id: cutMenuItem
-        text: "Cut"
-        onTriggered: {
-            cutItem(model.fullPath)
-        }
-    }
-
-    MenuItem {
-        id: pasteMenuItem
-        text: "Paste"
-        enabled: clipboardSourcePath !== ""
-        onTriggered: {
-            pasteItem(model.fullPath)
-        }
-    }
-
-    MenuItem {
-        id: renameMenuItem
-        text: "Rename"
-        onTriggered: {
-            renameDialog.open();
-        }
-    }
-
-    MenuItem {
-        id: deleteMenuItem
-        text: "Delete"
-        onTriggered: {
-            confirmDeleteDialog.open()
-        }
-    }
+    property alias renameDialog: renameDialog
+    property alias confirmDeleteDialog: confirmDeleteDialog
 
     Dialog {
         id: renameDialog
@@ -80,4 +43,3 @@ Menu {
         }
     }
 }
-

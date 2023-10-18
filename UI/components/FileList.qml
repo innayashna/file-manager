@@ -56,7 +56,7 @@ ListView {
             anchors.fill: parent
             acceptedButtons: Qt.RightButton
 
-            onClicked: (mouse)=> {
+            onClicked: (mouse) => {
                 if (mouse.button === Qt.RightButton) {
                     fileActionsMenu.popup();
                 }
@@ -65,6 +65,10 @@ ListView {
 
         FileActionsMenu {
             id: fileActionsMenu
+        }
+
+        FileMenuDialogs {
+            id: menuDialogs
         }
     }
 

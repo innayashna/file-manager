@@ -3,6 +3,8 @@ import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import FileManager 1.0
 
+import "./components"
+
 ApplicationWindow {
     visible: true
     width: 700
