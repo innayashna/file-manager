@@ -20,6 +20,9 @@ qt_add_qml_module(file_manager
         URI fileManager
         QML_FILES
         UI/FileManagerApp.qml
+        UI/ColumnHeaders.qml
+        UI/FileList.qml
+        UI/Toolbar.qml
         RESOURCES
         UI/icons/navigation/arrow-small-left.png
         UI/icons/navigation/arrow-small-right.png
