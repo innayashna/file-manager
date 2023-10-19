@@ -1,3 +1,4 @@
+#include <QDir>
 #include "File.h"
 
 File::File(const QString &filePath) : QObject(nullptr) {
@@ -6,9 +7,14 @@ File::File(const QString &filePath) : QObject(nullptr) {
     fullPath = fileInfo.absoluteFilePath();
     name = fileInfo.fileName();
     extension = fileInfo.suffix().toLower();
-    size = fileInfo.size();
     dateModified = fileInfo.lastModified();
     isDir = fileInfo.isDir();
+
+    if (isDir) {
+        size = getSize();
+    } else {
+        size = fileInfo.size();
+    }
 }
 
 QString File::getFullPath() const {
@@ -23,7 +29,18 @@ QString File::getExtension() const {
 }
 
 qint64 File::getSize() const {
-    return size;
+    if (isDir) {
+        qint64 totalSize = 0;
+        QDir dir(fullPath);
+        dir.setFilter(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
+        QFileInfoList entries = dir.entryInfoList();
+                foreach (QFileInfo entry, entries) {
+                totalSize += entry.size();
+            }
+        return totalSize;
+    } else {
+        return size;
+    }
 }
 
 QDateTime File::getDateModified() const {
