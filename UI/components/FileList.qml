@@ -21,17 +21,20 @@ ListView {
 
             Text {
                 text: model.name
+                elide: Text.ElideRight
                 color: model.fullPath === cutItemPath ? "gray" : "black"
                 width: 200
             }
 
             Text {
                 text: model.showExtension ? model.extension : ""
+                elide: Text.ElideRight
                 width: model.showExtension ? 100 : 0
             }
 
             Text {
                 text: model.showSize ? model.size : ""
+                elide: Text.ElideRight
                 width: model.showSize ? 100 : 0
             }
 
