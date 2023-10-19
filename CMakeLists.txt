@@ -20,6 +20,7 @@ qt_add_qml_module(file_manager
         URI fileManager
         QML_FILES
             UI/FileManagerApp.qml
+            UI/components/FileManagerPane.qml
             UI/components/ColumnHeaders.qml
             UI/components/FileList.qml
             UI/components/Toolbar.qml

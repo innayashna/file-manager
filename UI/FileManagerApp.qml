@@ -7,8 +7,8 @@ import "./components"
 
 ApplicationWindow {
     visible: true
-    width: 700
-    height: 600
+    width: 1300
+    height: 650
     title: "File Manager"
 
     property string currentDirectory: "/"
@@ -22,42 +22,30 @@ ApplicationWindow {
     property string cutItemPath: ""
     property var cutItems: []
 
-    Rectangle {
-        color: "white"
+    SplitView {
         anchors.fill: parent
+        orientation: Qt.Horizontal
 
-        ColumnHeaders {
-            id: columnHeaders
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.topMargin: 50
-            anchors.leftMargin: 20
+        FileManagerPane {
+            id: leftPane
+            implicitWidth: 650
         }
 
-        FileList {
-            id: fileListView
-            anchors.fill: parent
-            anchors.leftMargin: 20
-            anchors.topMargin: 80
-        }
-
-        Toolbar {
-            id: toolbar
-        }
-
-        ListModel {
-            id: fileModel
+        FileManagerPane {
+            id: rightPane
+            implicitWidth: 650
         }
     }
 
     Component.onCompleted: {
-        listDirectoryContents("/");
+        listDirectoryContents( "/", leftPane);
+        listDirectoryContents( "/", rightPane);
     }
 
-    function populateFileModel(result) {
-        fileModel.clear();
+    function populateFileModel(result, pane) {
+        pane.fileModel.clear();
         for (let i = 0; i < result.length; ++i) {
-            fileModel.append({
+            pane.fileModel.append({
                 name: result[i].name,
                 icon: result[i].icon,
                 size: result[i].size,
@@ -71,9 +59,9 @@ ApplicationWindow {
         }
     }
 
-    function listDirectoryContents(directoryPath) {
+    function listDirectoryContents(directoryPath, pane) {
         const result = fileManager.listFilesAndFolders(directoryPath);
-        populateFileModel(result);
+        populateFileModel(result, pane);
         currentDirectory = directoryPath;
     }
 
@@ -93,25 +81,25 @@ ApplicationWindow {
     }
 
     function resetSorting() {
-        toolbar.sortNone.checked = true;
+        leftPane.toolbar.sortNone.checked = true;
     }
 
     function updateAttributeVisibility(attribute, checked) {
-        for (let i = 0; i < fileModel.count; ++i) {
-            fileModel.get(i)[attribute] = checked;
+        for (let i = 0; i < leftPane.fileModel.count; ++i) {
+            leftPane.fileModel.get(i)[attribute] = checked;
         }
 
         switch (attribute) {
             case "showExtension":
-                columnHeaders.extensionHeader.visible = checked;
+                leftPane.columnHeaders.extensionHeader.visible = checked;
                 showExtension = checked;
                 break;
             case "showSize":
-                columnHeaders.sizeHeader.visible = checked;
+                leftPane.columnHeaders.sizeHeader.visible = checked;
                 showSize = checked;
                 break;
             case "showDate":
-                columnHeaders.dateHeader.visible = checked;
+                leftPane.columnHeaders.dateHeader.visible = checked;
                 showDate = checked;
                 break;
         }
@@ -123,11 +111,11 @@ ApplicationWindow {
             parts.pop();
             let previousDirectory = parts.join('/');
             if (previousDirectory === "") {
-                toolbar.goBackButton.enabled = false;
+                leftPane.toolbar.goBackButton.enabled = false;
                 previousDirectory = "/";
             }
             directoryHistory.push(currentDirectory);
-            toolbar.goForwardButton.enabled = true;
+            leftPane.toolbar.goForwardButton.enabled = true;
             listDirectoryContents(previousDirectory);
         } else {
             listDirectoryContents("/");
@@ -139,9 +127,9 @@ ApplicationWindow {
             const forwardDirectory = directoryHistory.pop();
             if (forwardDirectory.startsWith(currentDirectory.toString())) {
                 listDirectoryContents(forwardDirectory);
-                toolbar.goBackButton.enabled = true;
+                leftPane.toolbar.goBackButton.enabled = true;
             } else {
-                toolbar.goForwardButton.enabled = false;
+                leftPane.toolbar.goForwardButton.enabled = false;
             }
         }
     }

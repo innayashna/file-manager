@@ -7,13 +7,14 @@ ListView {
     model: fileModel
 
     delegate: Item {
-        width: 700
+        width: 650
         height: 30
 
         Row {
             spacing: 5
 
             Image {
+                id: image
                 source: model.icon
                 width: 16
                 height: 16
