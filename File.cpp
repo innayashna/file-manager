@@ -6,13 +6,14 @@ File::File(const QString &filePath) : QObject(nullptr) {
 
     fullPath = fileInfo.absoluteFilePath();
     name = fileInfo.fileName();
-    extension = fileInfo.suffix().toLower();
     dateModified = fileInfo.lastModified();
     isDir = fileInfo.isDir();
 
     if (isDir) {
+        extension = "";
         size = getSize();
     } else {
+        extension = fileInfo.suffix().toLower();
         size = fileInfo.size();
     }
 }
