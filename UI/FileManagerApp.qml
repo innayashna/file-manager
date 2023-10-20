@@ -11,14 +11,7 @@ ApplicationWindow {
     height: 650
     title: "File Manager"
 
-    property string currentDirectory: "/"
-    property var directoryHistory: []
     property string clipboardSourcePath: ""
-
-    property bool showExtension: true
-    property bool showSize: true
-    property bool showDate: true
-
     property string cutItemPath: ""
     property var cutItems: []
 
@@ -52,9 +45,9 @@ ApplicationWindow {
                 extension: result[i].extension,
                 dateModified: result[i].dateModified,
                 fullPath: result[i].fullPath,
-                showExtension: showExtension,
-                showSize: showSize,
-                showDate: showDate,
+                showExtension: pane.showExtension,
+                showSize: pane.showSize,
+                showDate: pane.showDate
             });
         }
     }
@@ -62,116 +55,116 @@ ApplicationWindow {
     function listDirectoryContents(directoryPath, pane) {
         const result = fileManager.listFilesAndFolders(directoryPath);
         populateFileModel(result, pane);
-        currentDirectory = directoryPath;
+        pane.currentDirectory = directoryPath;
     }
 
-    function sortDirectoryContentsByName() {
-        const result = fileManager.sortByName(currentDirectory);
-        populateFileModel(result);
+    function sortDirectoryContentsByName(pane) {
+        const result = fileManager.sortByName(pane.currentDirectory);
+        populateFileModel(result, pane);
     }
 
-    function sortDirectoryContentsBySize() {
-        const result = fileManager.sortBySize(currentDirectory);
-        populateFileModel(result);
+    function sortDirectoryContentsBySize(pane) {
+        const result = fileManager.sortBySize(pane.currentDirectory);
+        populateFileModel(result, pane);
     }
 
-    function sortDirectoryContentsByDateModified() {
-        const result = fileManager.sortByDateModified(currentDirectory);
-        populateFileModel(result);
+    function sortDirectoryContentsByDateModified(pane) {
+        const result = fileManager.sortByDateModified(pane.currentDirectory);
+        populateFileModel(result, pane);
     }
 
-    function resetSorting() {
-        leftPane.toolbar.sortNone.checked = true;
+    function resetSorting(pane) {
+        pane.toolbar.sortNone.checked = true;
     }
 
-    function updateAttributeVisibility(attribute, checked) {
-        for (let i = 0; i < leftPane.fileModel.count; ++i) {
-            leftPane.fileModel.get(i)[attribute] = checked;
+    function updateAttributeVisibility(attribute, checked, pane) {
+        for (let i = 0; i < pane.fileModel.count; ++i) {
+            pane.fileModel.get(i)[attribute] = checked;
         }
 
         switch (attribute) {
             case "showExtension":
-                leftPane.columnHeaders.extensionHeader.visible = checked;
-                showExtension = checked;
+                pane.columnHeaders.extensionHeader.visible = checked;
+                pane.showExtension = checked;
                 break;
             case "showSize":
-                leftPane.columnHeaders.sizeHeader.visible = checked;
-                showSize = checked;
+                pane.columnHeaders.sizeHeader.visible = checked;
+                pane.showSize = checked;
                 break;
             case "showDate":
-                leftPane.columnHeaders.dateHeader.visible = checked;
-                showDate = checked;
+                pane.columnHeaders.dateHeader.visible = checked;
+                pane.showDate = checked;
                 break;
         }
     }
 
-    function navigateBack() {
-        const parts = currentDirectory.split('/');
+    function navigateBack(pane) {
+        const parts = pane.currentDirectory.split('/');
         if (parts.length > 1) {
             parts.pop();
             let previousDirectory = parts.join('/');
             if (previousDirectory === "") {
-                leftPane.toolbar.goBackButton.enabled = false;
+                pane.toolbar.goBackButton.enabled = false;
                 previousDirectory = "/";
             }
-            directoryHistory.push(currentDirectory);
-            leftPane.toolbar.goForwardButton.enabled = true;
-            listDirectoryContents(previousDirectory);
+            pane.directoryHistory.push(pane.currentDirectory);
+            pane.toolbar.goForwardButton.enabled = true;
+            listDirectoryContents(previousDirectory, pane);
         } else {
-            listDirectoryContents("/");
+            listDirectoryContents("/", pane);
         }
     }
 
-    function navigateForward() {
-        if (directoryHistory.length >= 1) {
-            const forwardDirectory = directoryHistory.pop();
-            if (forwardDirectory.startsWith(currentDirectory.toString())) {
-                listDirectoryContents(forwardDirectory);
-                leftPane.toolbar.goBackButton.enabled = true;
+    function navigateForward(pane) {
+        if (pane.directoryHistory.length >= 1) {
+            const forwardDirectory = pane.directoryHistory.pop();
+            if (forwardDirectory.startsWith(pane.currentDirectory.toString())) {
+                listDirectoryContents(forwardDirectory, pane);
+                pane.toolbar.goBackButton.enabled = true;
             } else {
-                leftPane.toolbar.goForwardButton.enabled = false;
+                pane.toolbar.goForwardButton.enabled = false;
             }
         }
     }
 
     function copyItem(sourcePath) {
-        clipboardSourcePath = sourcePath;
+        console.log(sourcePath)
         cutItems = [];
     }
 
-    function pasteItem(destinationPath) {
+    function pasteItem(destinationPath, pane) {
         const sourcePath = clipboardSourcePath;
 
         if (sourcePath && destinationPath) {
             if (cutItems.includes(sourcePath)) {
                 fileManager.copyItem(sourcePath, destinationPath);
-                deleteItem(sourcePath);
+                deleteItem(sourcePath, pane);
                 cutItems = cutItems.filter(item => item !== sourcePath);
             } else {
                 fileManager.copyItem(sourcePath, destinationPath);
             }
-            listDirectoryContents(destinationPath);
+            listDirectoryContents(destinationPath, pane);
             clipboardSourcePath = "";
         }
     }
 
-    function deleteItem(fullPath) {
+    function deleteItem(fullPath, pane) {
         fileManager.deleteItem(fullPath);
-        listDirectoryContents(currentDirectory);
+        listDirectoryContents(pane.currentDirectory, pane);
         cutItems = cutItems.filter(item => item !== fullPath);
     }
 
-    function cutItem(fullPath) {
+    function cutItem(fullPath, pane) {
         cutItemPath = fullPath;
-        listDirectoryContents(currentDirectory);
+        listDirectoryContents(pane.currentDirectory, pane);
         clipboardSourcePath = fullPath;
         cutItems.push(fullPath);
     }
 
-    function renameItem(sourcePath, newName) {
+    function renameItem(sourcePath, newName, pane) {
         if (newName !== "") {
             fileManager.renameItem(sourcePath, newName);
-            listDirectoryContents(currentDirectory);
+            listDirectoryContents(pane.currentDirectory, pane);
         }
     }
 }

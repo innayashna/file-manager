@@ -15,8 +15,8 @@ Row {
         icon.source: "icons/navigation/arrow-small-left.png"
         enabled: false
         onClicked: {
-            resetSorting();
-            navigateBack();
+            resetSorting(fileManagerPane);
+            navigateBack(fileManagerPane);
         }
         background: Rectangle {
             color: "transparent"
@@ -28,8 +28,8 @@ Row {
         icon.source: "icons/navigation/arrow-small-right.png"
         enabled: false
         onClicked: {
-            resetSorting();
-            navigateForward();
+            resetSorting(fileManagerPane);
+            navigateForward(fileManagerPane);
         }
         background: Rectangle {
             color: "transparent"

@@ -13,7 +13,7 @@ Menu {
         text: "None"
         checked: true
         onClicked: {
-            listDirectoryContents(currentDirectory)
+            listDirectoryContents(currentDirectory, fileManagerPane)
         }
     }
 
@@ -21,7 +21,7 @@ Menu {
         id: sortByName
         text: "By name"
         onClicked: {
-            sortDirectoryContentsByName();
+            sortDirectoryContentsByName(fileManagerPane);
         }
     }
 
@@ -29,7 +29,7 @@ Menu {
         id: sortBySize
         text: "By size"
         onClicked: {
-            sortDirectoryContentsBySize();
+            sortDirectoryContentsBySize(fileManagerPane);
         }
     }
 
@@ -37,7 +37,7 @@ Menu {
         id: sortByDateModified
         text: "By date"
         onClicked: {
-            sortDirectoryContentsByDateModified();
+            sortDirectoryContentsByDateModified(fileManagerPane);
         }
     }
 }

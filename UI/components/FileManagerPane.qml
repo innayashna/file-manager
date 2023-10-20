@@ -3,10 +3,19 @@ import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 
 Pane {
+    id: fileManagerPane
+
     property alias toolbar: toolbar
     property alias columnHeaders: columnHeaders
     property alias fileListView: fileListView
     property alias fileModel: fileModel
+
+    property string currentDirectory: "/"
+    property var directoryHistory: []
+
+    property bool showExtension: true
+    property bool showSize: true
+    property bool showDate: true
 
     Rectangle {
         anchors.fill: parent

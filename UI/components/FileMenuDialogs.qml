@@ -24,7 +24,7 @@ Item {
         onAccepted: {
             const newName = newNameInput.text.trim();
             if (newName !== "") {
-                renameItem(model.fullPath, newName);
+                renameItem(model.fullPath, newName, fileManagerPane);
             }
         }
     }
@@ -39,7 +39,7 @@ Item {
         }
 
         onAccepted: {
-            deleteItem(model.fullPath);
+            deleteItem(model.fullPath, fileManagerPane);
         }
     }
 }

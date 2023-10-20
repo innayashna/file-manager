@@ -5,6 +5,7 @@ import QtQuick.Controls.Material 2.15
 Menu {
     id: attributeMenu
     y: attributeMenuButton.height
+
     MenuItem {
         id: extensionMenuItem
         text: "Extension"
@@ -12,7 +13,7 @@ Menu {
         checked: true
 
         onCheckedChanged: {
-            updateAttributeVisibility("showExtension", checked);
+            updateAttributeVisibility("showExtension", checked, fileManagerPane);
         }
     }
 
@@ -23,7 +24,7 @@ Menu {
         checked: true
 
         onCheckedChanged: {
-            updateAttributeVisibility("showSize", checked);
+            updateAttributeVisibility("showSize", checked, fileManagerPane);
         }
     }
 
@@ -34,7 +35,7 @@ Menu {
         checked: true
 
         onCheckedChanged: {
-            updateAttributeVisibility("showDate", checked);
+            updateAttributeVisibility("showDate", checked, fileManagerPane);
         }
     }
 }

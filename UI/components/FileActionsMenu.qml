@@ -17,7 +17,7 @@ Menu {
         id: cutMenuItem
         text: "Cut"
         onTriggered: {
-            cutItem(model.fullPath)
+            cutItem(model.fullPath, fileManagerPane)
         }
     }
 
@@ -26,7 +26,7 @@ Menu {
         text: "Paste"
         enabled: clipboardSourcePath !== ""
         onTriggered: {
-            pasteItem(model.fullPath)
+            pasteItem(model.fullPath, fileManagerPane)
         }
     }
 
