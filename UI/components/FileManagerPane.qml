@@ -11,6 +11,7 @@ Pane {
     property alias fileModel: fileModel
 
     property string currentDirectory: "/"
+    property string currentDirectoryShortPath: "/"
     property var directoryHistory: []
 
     property bool showExtension: true
