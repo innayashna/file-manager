@@ -144,6 +144,7 @@ ApplicationWindow {
                 fileManager.copyItem(sourcePath, destinationPath);
             }
             listDirectoryContents(destinationPath, pane);
+            updateInactivePane(pane);
             clipboardSourcePath = "";
         }
     }
@@ -151,12 +152,14 @@ ApplicationWindow {
     function deleteItem(fullPath, pane) {
         fileManager.deleteItem(fullPath);
         listDirectoryContents(pane.currentDirectory, pane);
+        updateInactivePane(pane);
         cutItems = cutItems.filter(item => item !== fullPath);
     }
 
     function cutItem(fullPath, pane) {
         cutItemPath = fullPath;
         listDirectoryContents(pane.currentDirectory, pane);
+        updateInactivePane(pane);
         clipboardSourcePath = fullPath;
         cutItems.push(fullPath);
     }
@@ -165,6 +168,15 @@ ApplicationWindow {
         if (newName !== "") {
             fileManager.renameItem(sourcePath, newName);
             listDirectoryContents(pane.currentDirectory, pane);
+            updateInactivePane(pane);
+        }
+    }
+
+    function updateInactivePane(pane) {
+        if (pane === rightPane) {
+            listDirectoryContents(leftPane.currentDirectory, leftPane);
+        } else {
+            listDirectoryContents(rightPane.currentDirectory, rightPane);
         }
     }
 }
