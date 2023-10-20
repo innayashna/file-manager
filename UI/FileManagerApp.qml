@@ -7,9 +7,13 @@ import "./components"
 
 ApplicationWindow {
     visible: true
-    width: 1300
-    height: 650
     title: "File Manager"
+
+    width: 1300
+    height: 700
+
+    minimumWidth: 1300
+    maximumWidth: 1300
 
     property string clipboardSourcePath: ""
     property string cutItemPath: ""

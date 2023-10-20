@@ -22,7 +22,7 @@ Row {
         id: extensionHeader
         text: "Extension"
         font.bold: true
-        width: 110
+        width: 120
     }
 
     Text {

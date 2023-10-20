@@ -69,7 +69,7 @@ RowLayout {
 
     Item {
         id: blancSpace
-        width: 50
+        width: 20
     }
 
     Button {
@@ -91,6 +91,10 @@ RowLayout {
         AttributeMenu {
             id: attributeMenu
         }
+    }
+
+    Item {
+        width: 10
     }
 
     Button {

@@ -25,12 +25,20 @@ Pane {
             id: toolbar
         }
 
+        Rectangle {
+            color: "gray"
+            anchors.top: toolbar.bottom
+            anchors.topMargin: 10
+            width: 650
+            height: 1
+        }
+
         ColumnHeaders {
             id: columnHeaders
             anchors.top: parent.top
             anchors.left: parent.left
-            anchors.topMargin: 40
             anchors.leftMargin: 20
+            anchors.topMargin: 40
         }
 
         FileList {
