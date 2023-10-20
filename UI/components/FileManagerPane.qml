@@ -29,7 +29,7 @@ Pane {
             id: columnHeaders
             anchors.top: parent.top
             anchors.left: parent.left
-            anchors.topMargin: 50
+            anchors.topMargin: 40
             anchors.leftMargin: 20
         }
 
@@ -37,7 +37,7 @@ Pane {
             id: fileListView
             anchors.fill: parent
             anchors.leftMargin: 20
-            anchors.topMargin: 80
+            anchors.topMargin: 70
         }
 
         ListModel {

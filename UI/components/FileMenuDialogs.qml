@@ -14,6 +14,10 @@ Item {
         title: "Rename Item"
         standardButtons: Dialog.Ok | Dialog.Cancel
 
+        parent: fileManagerPane
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+
         TextInput {
             id: newNameInput
             width: 300
@@ -33,6 +37,10 @@ Item {
         id: confirmDeleteDialog
         title: "Confirm Deletion"
         standardButtons: Dialog.Ok | Dialog.Cancel
+
+        parent: fileManagerPane
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
 
         Text {
             text: "Are you sure you want to delete this item?"
