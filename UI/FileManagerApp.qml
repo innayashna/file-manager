@@ -140,7 +140,7 @@ ApplicationWindow {
     }
 
     function copyItem(sourcePath) {
-        console.log(sourcePath)
+        clipboardSourcePath = sourcePath;
         cutItems = [];
     }
 
