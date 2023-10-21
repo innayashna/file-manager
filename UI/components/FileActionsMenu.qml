@@ -26,6 +26,10 @@ Menu {
         text: "Paste"
         enabled: clipboardSourcePath !== ""
         onTriggered: {
+            if (!model.isDir) {
+                fileDialogs.pasteFileDialog.open();
+                return;
+            }
             pasteItem(model.fullPath, fileManagerPane)
         }
     }
@@ -44,6 +48,10 @@ Menu {
         onTriggered: {
             menuDialogs.confirmDeleteDialog.open()
         }
+    }
+
+    FileDialogs {
+        id: fileDialogs
     }
 
     Connections {

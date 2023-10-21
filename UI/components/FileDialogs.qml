@@ -5,10 +5,11 @@ import QtQuick.Controls.Material 2.15
 Item {
     id: fileDialogs
 
-    property alias fileOpenDialog: fileOpenDialog
+    property alias openFileDialog: openFileDialog
+    property alias pasteFileDialog: pasteFileDialog
 
     Dialog {
-        id: fileOpenDialog
+        id: openFileDialog
         title: "Open File"
         standardButtons: Dialog.Ok
 
@@ -18,6 +19,20 @@ Item {
 
         Text {
             text: "Sorry, app could not open files!"
+        }
+    }
+
+    Dialog {
+        id: pasteFileDialog
+        title: "Paste File"
+        standardButtons: Dialog.Ok
+
+        parent: fileManagerPane
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+
+        Text {
+            text: "File should only be pasted to directory!"
         }
     }
 }

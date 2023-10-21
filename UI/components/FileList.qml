@@ -51,7 +51,7 @@ ListView {
                 const selectedItem = model.fullPath;
 
                 if (!model.isDir) {
-                    fileDialogs.fileOpenDialog.open();
+                    fileDialogs.openFileDialog.open();
                     return;
                 }
 
