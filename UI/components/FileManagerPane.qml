@@ -14,6 +14,8 @@ Pane {
     property string currentDirectoryShortPath: "/"
     property var directoryHistory: []
 
+    property string activeSort: "sortNone"
+
     property bool showExtension: true
     property bool showSize: true
     property bool showDate: true

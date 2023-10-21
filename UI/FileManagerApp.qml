@@ -85,8 +85,20 @@ ApplicationWindow {
         populateFileModel(result, pane);
     }
 
-    function resetSorting(pane) {
-        pane.toolbar.sortNone.checked = true;
+    function keepActiveSort(pane) {
+        switch (pane.activeSort) {
+            case "sortNone":
+                break;
+            case "sortByName":
+                sortDirectoryContentsByName(pane);
+                break;
+            case "sortBySize":
+                sortDirectoryContentsBySize(pane);
+                break;
+            case "sortByDateModified":
+                sortDirectoryContentsByDateModified(pane);
+                break;
+        }
     }
 
     function updateAttributeVisibility(attribute, checked, pane) {

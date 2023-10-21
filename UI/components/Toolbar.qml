@@ -26,8 +26,8 @@ RowLayout {
         enabled: false
 
         onClicked: {
-            resetSorting(fileManagerPane);
             navigateBack(fileManagerPane);
+            keepActiveSort(fileManagerPane);
         }
 
         background: Rectangle {
@@ -50,8 +50,8 @@ RowLayout {
         enabled: false
 
         onClicked: {
-            resetSorting(fileManagerPane);
             navigateForward(fileManagerPane);
+            keepActiveSort(fileManagerPane);
         }
 
         background: Rectangle {

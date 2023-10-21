@@ -51,7 +51,7 @@ ListView {
                 const selectedItem = model.fullPath;
                 toolbar.goBackButton.enabled = true
                 listDirectoryContents(selectedItem, fileManagerPane);
-                resetSorting(fileManagerPane);
+                keepActiveSort(fileManagerPane);
             }
         }
 

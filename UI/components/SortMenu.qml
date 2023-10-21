@@ -7,13 +7,15 @@ Menu {
     y: sortMenuButton.height
 
     property alias sortNone: sortNone
+    property string activeSort: "sortNone"
 
     RadioButton {
         id: sortNone
         text: "None"
         checked: true
         onClicked: {
-            listDirectoryContents(currentDirectory, fileManagerPane)
+            listDirectoryContents(currentDirectory, fileManagerPane);
+            fileManagerPane.activeSort = "sortNone"
         }
     }
 
@@ -22,6 +24,7 @@ Menu {
         text: "By name"
         onClicked: {
             sortDirectoryContentsByName(fileManagerPane);
+            fileManagerPane.activeSort = "sortByName"
         }
     }
 
@@ -30,6 +33,7 @@ Menu {
         text: "By size"
         onClicked: {
             sortDirectoryContentsBySize(fileManagerPane);
+            fileManagerPane.activeSort = "sortBySize"
         }
     }
 
@@ -38,6 +42,7 @@ Menu {
         text: "By date"
         onClicked: {
             sortDirectoryContentsByDateModified(fileManagerPane);
+            fileManagerPane.activeSort = "sortByDateModified"
         }
     }
 }
