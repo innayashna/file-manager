@@ -49,6 +49,7 @@ ApplicationWindow {
                 extension: result[i].extension,
                 dateModified: result[i].dateModified,
                 fullPath: result[i].fullPath,
+                isDir: result[i].isDir,
                 showExtension: pane.showExtension,
                 showSize: pane.showSize,
                 showDate: pane.showDate

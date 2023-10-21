@@ -49,6 +49,12 @@ ListView {
             anchors.fill: parent
             onClicked: {
                 const selectedItem = model.fullPath;
+
+                if (!model.isDir) {
+                    fileDialogs.fileOpenDialog.open();
+                    return;
+                }
+
                 toolbar.goBackButton.enabled = true
                 listDirectoryContents(selectedItem, fileManagerPane);
                 keepActiveSort(fileManagerPane);
@@ -73,6 +79,10 @@ ListView {
 
         FileMenuDialogs {
             id: menuDialogs
+        }
+
+        FileDialogs {
+            id: fileDialogs
         }
     }
 

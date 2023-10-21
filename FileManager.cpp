@@ -20,15 +20,11 @@ QList<File*> FileManager::listFilesAndFolders(const QString &path) {
                 file->setIcon(icon);
                 result.append(file);
             }
-        } else {
-            File* errorFile = new File("Invalid directory path or directory does not exist.");
-            result.append(errorFile);
         }
     } catch (const std::exception& ex) {
         File* errorFile = new File("Error: " + QString(ex.what()));
         result.append(errorFile);
     }
-
     return result;
 }
 

@@ -28,6 +28,7 @@ qt_add_qml_module(file_manager
             UI/components/SortMenu.qml
             UI/components/FileActionsMenu.qml
             UI/components/FileMenuDialogs.qml
+            UI/components/FileDialogs.qml
         RESOURCES
             UI/components/icons/navigation/arrow-small-left.png
             UI/components/icons/navigation/arrow-small-right.png
