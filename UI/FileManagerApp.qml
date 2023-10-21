@@ -60,14 +60,7 @@ ApplicationWindow {
         const result = fileManager.listFilesAndFolders(directoryPath);
         populateFileModel(result, pane);
         pane.currentDirectory = directoryPath;
-
-        const parts = pane.currentDirectory.split('/');
-        if (parts.length > 4) {
-            const lastComponent = parts[parts.length - 1];
-            pane.currentDirectoryShortPath = "./" + lastComponent;
-        } else {
-            pane.currentDirectoryShortPath = pane.currentDirectory;
-        }
+        defineShortPath(pane);
     }
 
     function sortDirectoryContentsByName(pane) {
@@ -201,6 +194,16 @@ ApplicationWindow {
             listDirectoryContents(leftPane.currentDirectory, leftPane);
         } else {
             listDirectoryContents(rightPane.currentDirectory, rightPane);
+        }
+    }
+
+    function defineShortPath(pane) {
+        const parts = pane.currentDirectory.split('/');
+        if (parts.length > 3) {
+            const lastComponent = parts[parts.length - 1];
+            pane.currentDirectoryShortPath = "./" + lastComponent;
+        } else {
+            pane.currentDirectoryShortPath = pane.currentDirectory;
         }
     }
 }
