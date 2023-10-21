@@ -24,7 +24,7 @@ Menu {
     MenuItem {
         id: pasteMenuItem
         text: "Paste"
-        enabled: clipboardSourcePath !== ""
+        enabled: clipboardSourcePath !== "" && clipboardSourcePath !== model.fullPath
         onTriggered: {
             if (!model.isDir) {
                 fileDialogs.pasteFileDialog.open();
