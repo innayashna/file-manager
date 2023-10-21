@@ -61,6 +61,7 @@ ApplicationWindow {
         populateFileModel(result, pane);
         pane.currentDirectory = directoryPath;
         defineShortPath(pane);
+        pane.toolbar.goForwardButton.enabled = pane.directoryHistory.length >= 1;
     }
 
     function sortDirectoryContentsByName(pane) {
