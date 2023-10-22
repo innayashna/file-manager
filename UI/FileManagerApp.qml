@@ -19,9 +19,6 @@ ApplicationWindow {
     property string cutItemPath: ""
     property var cutItems: []
 
-    property bool copyFinished: false
-    property bool deleteFinished: false
-
     SplitView {
         anchors.fill: parent
         orientation: Qt.Horizontal
@@ -65,6 +62,7 @@ ApplicationWindow {
         populateFileModel(result, pane);
         pane.currentDirectory = directoryPath;
         defineShortPath(pane);
+        keepActiveSort(pane);
         pane.toolbar.goForwardButton.enabled = pane.directoryHistory.length >= 1;
     }
 
