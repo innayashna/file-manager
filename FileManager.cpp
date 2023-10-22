@@ -1,12 +1,28 @@
-#include "FileManager.h"
-#include "File.h"
 #include <filesystem>
 #include <QFileInfo>
-#include <iostream>
+#include <QThread>
+
+#include "File.h"
+#include "FileManager.h"
+#include "FileManagerWorker.h"
 
 namespace fs = std::filesystem;
 
-FileManager::FileManager(QObject *parent) : QObject(parent) {}
+FileManager::FileManager(QObject *parent) : QObject(parent) {
+    copyThread = new QThread();
+    deleteThread = new QThread();
+    copyWorker = new FileManagerWorker();
+    deleteWorker = new FileManagerWorker();
+
+    copyWorker->moveToThread(copyThread);
+    deleteWorker->moveToThread(deleteThread);
+
+    connect(copyWorker, SIGNAL(copyFinished()), this, SIGNAL(copyFinished()));
+    connect(deleteWorker, SIGNAL(deleteFinished()), this, SIGNAL(deleteFinished()));
+
+    copyThread->start();
+    deleteThread->start();
+}
 
 QList<File*> FileManager::listFilesAndFolders(const QString &path) {
     QList<File*> result;
@@ -53,45 +69,20 @@ QList<File*> FileManager::sortByDateModified(const QString &path) {
 }
 
 void FileManager::copyItem(const QString &sourcePath, const QString &destinationPath) {
-    fs::path source = sourcePath.toStdString();
-    fs::path destination = destinationPath.toStdString();
+    connect(copyWorker, SIGNAL(copyFinished()), copyThread, SLOT(quit()));
 
-    try {
-        if (fs::exists(source)) {
-            std::string sourceName = source.filename();
-            fs::path destinationWithFileName = destination / sourceName;
-
-            int index = 1;
-            while (fs::exists(destinationWithFileName)) {
-                std::string newName = generateUniqueName(sourceName, index);
-                destinationWithFileName = destination / newName;
-                index++;
-            }
-
-            fs::copy(source, destinationWithFileName, fs::copy_options::recursive);
-        } else {
-            qDebug() << "Source path does not exist: " << sourcePath;
-        }
-    } catch (const std::exception &ex) {
-        qDebug() << "Error copying file/directory: " << ex.what();
-    }
+    QMetaObject::invokeMethod(copyWorker, "copyItem", Qt::QueuedConnection,
+                              Q_ARG(QString, sourcePath), Q_ARG(QString, destinationPath));
+    copyThread->start();
+    emit copyFinished();
 }
 
 void FileManager::deleteItem(const QString &path) {
-    fs::path itemPath = path.toStdString();
-    try {
-        if (fs::exists(itemPath)) {
-            if (fs::is_directory(itemPath)) {
-                fs::remove_all(itemPath);
-            } else {
-                fs::remove(itemPath);
-            }
-        } else {
-            qDebug() << "Item does not exist: " << path;
-        }
-    } catch (const std::exception &ex) {
-        qDebug() << "Error deleting file/directory: " << ex.what();
-    }
+    connect(deleteWorker, SIGNAL(deleteFinished()), deleteThread, SLOT(quit()));
+
+    QMetaObject::invokeMethod(deleteWorker, "deleteItem", Qt::QueuedConnection, Q_ARG(QString, path));
+    deleteThread->start();
+    emit deleteFinished();
 }
 
 void FileManager::renameItem(const QString &sourcePath, const QString &newName) {
@@ -135,15 +126,5 @@ QString FileManager::defineIcon(const File& file) {
         } else {
             return "icons/file/default-file.png";
         }
-    }
-}
-
-std::string FileManager::generateUniqueName(const std::string &sourceName, int index) {
-    if (sourceName.find('.') != std::string::npos) {
-        std::string baseName = sourceName.substr(0, sourceName.find_last_of('.'));
-        std::string extension = sourceName.substr(sourceName.find_last_of('.'));
-        return baseName + "_" + std::to_string(index) + extension;
-    } else {
-        return sourceName + "_" + std::to_string(index);
     }
 }
