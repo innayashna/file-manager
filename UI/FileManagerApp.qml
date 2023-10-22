@@ -19,6 +19,9 @@ ApplicationWindow {
     property string cutItemPath: ""
     property var cutItems: []
 
+    property bool copyFinished: false
+    property bool deleteFinished: false
+
     SplitView {
         anchors.fill: parent
         orientation: Qt.Horizontal
@@ -157,22 +160,33 @@ ApplicationWindow {
         if (sourcePath && destinationPath) {
             if (cutItems.includes(sourcePath)) {
                 fileManager.copyItem(sourcePath, destinationPath);
-                deleteItem(sourcePath, pane);
-                cutItems = cutItems.filter(item => item !== sourcePath);
+                if (copyFinished) {
+                    deleteItem(sourcePath, pane);
+                    listDirectoryContents(destinationPath, pane);
+                    updateInactivePane(pane);
+                    clipboardSourcePath = "";
+                    copyFinished = false;
+                }
             } else {
                 fileManager.copyItem(sourcePath, destinationPath);
+                if (copyFinished) {
+                    listDirectoryContents(destinationPath, pane);
+                    updateInactivePane(pane);
+                    clipboardSourcePath = "";
+                    copyFinished = false;
+                }
             }
-            listDirectoryContents(destinationPath, pane);
-            updateInactivePane(pane);
-            clipboardSourcePath = "";
         }
     }
 
     function deleteItem(fullPath, pane) {
         fileManager.deleteItem(fullPath);
-        listDirectoryContents(pane.currentDirectory, pane);
-        updateInactivePane(pane);
-        cutItems = cutItems.filter(item => item !== fullPath);
+        if (deleteFinished) {
+            listDirectoryContents(pane.currentDirectory, pane);
+            updateInactivePane(pane);
+            cutItems = cutItems.filter(item => item !== fullPath);
+            deleteFinished = false;
+        }
     }
 
     function cutItem(fullPath, pane) {
@@ -206,6 +220,25 @@ ApplicationWindow {
             pane.currentDirectoryShortPath = "./" + lastComponent;
         } else {
             pane.currentDirectoryShortPath = pane.currentDirectory;
+        }
+    }
+
+    function updateCopyFinished() {
+        copyFinished = true;
+    }
+
+    function updateDeleteFinished() {
+        deleteFinished = true;
+    }
+
+    Connections {
+        target: fileManager
+        function onCopyFinished() {
+            updateCopyFinished();
+        }
+
+        function onDeleteFinished() {
+            updateDeleteFinished();
         }
     }
 }

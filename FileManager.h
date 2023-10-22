@@ -3,7 +3,11 @@
 
 #include <QObject>
 #include <QStringList>
+#include <QThread>
+#include <QMutex>
+
 #include "File.h"
+#include "FileManagerWorker.h"
 
 namespace fs = std::filesystem;
 
@@ -15,13 +19,22 @@ public:
     Q_INVOKABLE static QList<File*> sortByName(const QString &path);
     Q_INVOKABLE static QList<File*> sortBySize(const QString &path);
     Q_INVOKABLE static QList<File*> sortByDateModified(const QString &path);
-    Q_INVOKABLE static void copyItem(const QString &sourcePath, const QString &destinationPath);
-    Q_INVOKABLE static void deleteItem(const QString &path);
     Q_INVOKABLE static void renameItem(const QString &sourcePath, const QString &newName);
 
+signals:
+    void copyFinished();
+    void deleteFinished();
+
+public slots:
+    void copyItem(const QString& sourcePath, const QString& destinationPath);
+    void deleteItem(const QString& path);
+
 private:
+    QThread* copyThread;
+    QThread* deleteThread;
+    FileManagerWorker* copyWorker;
+    FileManagerWorker* deleteWorker;
     static QString defineIcon(const File& file);
-    static std::string generateUniqueName(const std::string &sourceName, int index);
 };
 
 #endif // FILE_MANAGER_H

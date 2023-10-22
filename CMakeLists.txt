@@ -14,7 +14,8 @@ set(Qt6_DIR "/opt/homebrew/opt/qt/lib/cmake/Qt6")
 add_executable(file_manager main.cpp
         FileManager.cpp
         File.h
-        File.cpp)
+        File.cpp
+        FileManagerWorker.cpp)
 
 qt_add_qml_module(file_manager
         URI fileManager
