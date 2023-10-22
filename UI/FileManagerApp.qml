@@ -159,34 +159,33 @@ ApplicationWindow {
 
         if (sourcePath && destinationPath) {
             if (cutItems.includes(sourcePath)) {
-                fileManager.copyItem(sourcePath, destinationPath);
-                if (copyFinished) {
+                fileManager.onCopyFinished.connect(function() {
                     deleteItem(sourcePath, pane);
                     listDirectoryContents(destinationPath, pane);
                     updateInactivePane(pane);
                     clipboardSourcePath = "";
-                    copyFinished = false;
-                }
-            } else {
+                });
                 fileManager.copyItem(sourcePath, destinationPath);
-                if (copyFinished) {
+            } else {
+                fileManager.onCopyFinished.connect(function() {
                     listDirectoryContents(destinationPath, pane);
                     updateInactivePane(pane);
                     clipboardSourcePath = "";
-                    copyFinished = false;
-                }
+                });
+                fileManager.copyItem(sourcePath, destinationPath);
             }
         }
     }
 
+
+
     function deleteItem(fullPath, pane) {
-        fileManager.deleteItem(fullPath);
-        if (deleteFinished) {
+        fileManager.onDeleteFinished.connect(function() {
             listDirectoryContents(pane.currentDirectory, pane);
             updateInactivePane(pane);
             cutItems = cutItems.filter(item => item !== fullPath);
-            deleteFinished = false;
-        }
+        });
+        fileManager.deleteItem(fullPath);
     }
 
     function cutItem(fullPath, pane) {
@@ -223,22 +222,12 @@ ApplicationWindow {
         }
     }
 
-    function updateCopyFinished() {
-        copyFinished = true;
-    }
-
-    function updateDeleteFinished() {
-        deleteFinished = true;
-    }
-
     Connections {
         target: fileManager
         function onCopyFinished() {
-            updateCopyFinished();
         }
 
         function onDeleteFinished() {
-            updateDeleteFinished();
         }
     }
 }
