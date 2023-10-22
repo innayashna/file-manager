@@ -41,8 +41,6 @@ void FileManagerWorker::deleteItem(const QString &path) {
             } else {
                 fs::remove(itemPath);
             }
-        } else {
-            qDebug() << "Item does not exist: " << path;
         }
     } catch (const std::exception &ex) {
         qDebug() << "Error deleting file/directory: " << ex.what();
