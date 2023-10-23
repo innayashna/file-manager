@@ -1,7 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include "FileManager.h"
+#include "include/FileManager.h"
 
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);

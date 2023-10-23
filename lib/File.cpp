@@ -1,5 +1,5 @@
 #include <QDir>
-#include "File.h"
+#include "include/File.h"
 
 File::File(const QString &filePath) : QObject(nullptr) {
     QFileInfo fileInfo(filePath);

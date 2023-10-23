@@ -2,9 +2,9 @@
 #include <QFileInfo>
 #include <QThread>
 
-#include "File.h"
-#include "FileManager.h"
-#include "FileManagerWorker.h"
+#include "include/File.h"
+#include "include/FileManager.h"
+#include "include/FileManagerWorker.h"
 
 namespace fs = std::filesystem;
 

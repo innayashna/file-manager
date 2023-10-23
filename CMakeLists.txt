@@ -11,11 +11,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(Qt6_DIR "/opt/homebrew/opt/qt/lib/cmake/Qt6")
 
 
-add_executable(file_manager main.cpp
-        FileManager.cpp
-        File.h
-        File.cpp
-        FileManagerWorker.cpp)
+add_executable(file_manager src/main.cpp
+        lib/FileManager.cpp
+        include/File.h
+        include/FileManager.h
+        include/FileManagerWorker.h
+        lib/File.cpp
+        lib/FileManagerWorker.cpp)
 
 qt_add_qml_module(file_manager
         URI fileManager

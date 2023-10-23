@@ -2,7 +2,7 @@
 #include <QFileInfo>
 #include <iostream>
 
-#include "FileManagerWorker.h"
+#include "include/FileManagerWorker.h"
 
 namespace fs = std::filesystem;
 
